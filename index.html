@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <title>Bit Mining App</title>
     <style>
+        /* Styles remain unchanged */
         body {
             background-color: black;
             font-family: Arial, sans-serif;
@@ -234,7 +235,6 @@
             color: white;
         }
     </style>
-    
 </head>
 <body>
     <header>
@@ -263,44 +263,37 @@
         <div class="logo-container" id="logoContainer">
             <div class="logo" id="logo">
                 <div class="coin"></div>
-                <div class="letter" onclick="startMining()">B</div>
+                <div class="letter" id="startMiningButton">B</div>
             </div>
         </div>
-
         <div id="timer" class="hidden"></div>
-
         <h2 id="message"></h2>
     </main>
-
-    <!-- Referral Info Section -->
     <div id="referralInfo" class="referral-info hidden">
         <p>No. of Invites: <span id="inviteCount">0</span></p>
         <p>Mining Status of Referral: <span id="referralMiningStatus">Not mining</span></p>
         <p>Increase Mining Speed With More Invites.</p>
     </div>
-
     <nav class="nav-bottom">
         <!-- Add your bottom navigation items here -->
     </nav>
-    
     <script>
-        let totalCoins = 0;
+        let totalCoins = parseFloat(localStorage.getItem('totalCoins')) || 0;
         let coinsPerDay = 2;
         let secondsInADay = 86400;
         let coinsPerSecond = coinsPerDay / secondsInADay;
         let miningInterval;
         let miningStarted = false;
-        let startTime;
+        let startTime = parseFloat(localStorage.getItem('startTime')) || new Date().getTime();
 
-        // Function to start mining
         function startMining() {
             if (miningStarted) return;
             miningStarted = true;
 
             document.getElementById('timer').classList.remove('hidden');
             startTime = new Date().getTime();
+            localStorage.setItem('startTime', startTime);
 
-            // Start mining process
             miningInterval = setInterval(() => {
                 let currentTime = new Date().getTime();
                 let elapsedTime = currentTime - startTime;
@@ -313,22 +306,16 @@
                 if (totalCoins >= 1) {
                     document.getElementById('message').textContent = `Congratulations! You've mined 1 B!`;
                     clearInterval(miningInterval);
-                    saveMiningProgress(); // Save mining progress when 1 B is mined
+                    saveMiningProgress();
                 }
             }, 1000);
         }
 
-        // Function to toggle menu visibility
         function toggleMenu() {
             const menu = document.getElementById('menu');
-            if (menu.style.display === 'none' || menu.style.display === '') {
-                menu.style.display = 'flex';
-            } else {
-                menu.style.display = 'none';
-            }
+            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
         }
 
-        // Function to open referral team section
         function openReferralTeam() {
             const referralInfo = document.getElementById('referralInfo');
             referralInfo.classList.toggle('hidden');
@@ -336,7 +323,6 @@
             updateReferralMiningStatus();
         }
 
-        // Function to update invite count
         function updateInviteCount() {
             let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
             inviteCount++;
@@ -344,7 +330,6 @@
             document.getElementById('inviteCount').textContent = inviteCount;
         }
 
-        // Function to update referral mining status
         function updateReferralMiningStatus() {
             let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
             let referralMiningStatus = 'Not mining';
@@ -356,30 +341,30 @@
             document.getElementById('referralMiningStatus').textContent = referralMiningStatus;
         }
 
-        // Function to open Telegram link
         function followTelegram() {
             window.open('https://t.me/BITMINE_REAL', '_blank');
         }
 
-        // Function to resume mining on page load
         document.addEventListener('DOMContentLoaded', (event) => {
             resumeMining();
+            document.getElementById('startMiningButton').addEventListener('click', startMining);
         });
 
-        // Function to resume mining from localStorage
         function resumeMining() {
-            totalCoins = parseFloat(localStorage.getItem('totalCoins')) || 0;
-            startTime = parseFloat(localStorage.getItem('startTime')) || new Date().getTime();
-            if (totalCoins > 0) {
-                document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
-                startMining();
-            }
+            let lastUpdateTime = parseFloat(localStorage.getItem('lastUpdateTime')) || new Date().getTime();
+            let elapsedTime = new Date().getTime() - lastUpdateTime;
+            let elapsedSeconds = elapsedTime / 1000;
+            totalCoins += elapsedSeconds * coinsPerSecond;
+
+            document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
+            localStorage.setItem('totalCoins', totalCoins);
+            localStorage.setItem('lastUpdateTime', new Date().getTime());
         }
 
-        // Function to save mining progress to localStorage
         function saveMiningProgress() {
             localStorage.setItem('totalCoins', totalCoins);
             localStorage.setItem('startTime', startTime);
+            localStorage.setItem('lastUpdateTime', new Date().getTime());
         }
     </script>
 </body>

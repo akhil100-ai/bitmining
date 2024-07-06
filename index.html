@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bit Mining App</title>
+    
     <style>
         body {
-            background: url('https://img.freepik.com/premium-vector/halloween-scene-haunting-nightmare-hallowen-background-cartoon-horror-scenery-scary-ghost-tomb_78492-29563.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background-color: black;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -18,31 +17,67 @@
             text-align: center;
         }
 
-        header {
-            background-color: rgba(44, 8, 77, 0.7);
-            padding: 20px;
-        }
-
         header h1 {
             margin: 0;
             color: #FFD700;
             font-size: 1.5em;
         }
 
-        nav {
-            background-color: rgba(44, 8, 77, 0.7);
-            padding: 10px 0;
+        .nav-top,
+        .nav-bottom {
+            background-color: white;
+            padding: 20px;
             display: flex;
-            justify-content: space-around;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            z-index: 1;
+            color: black;
         }
 
-        nav button {
-            background-color: transparent;
-            color: white;
-            border: none;
+        .nav-top {
+            top: 0;
+        }
+
+        .nav-bottom {
+            bottom: 0;
+        }
+
+        #menuIcon {
+            position: absolute;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             cursor: pointer;
-            font-size: 0.9em;
-            padding: 10px;
+            margin-right: 10px;
+        }
+
+        #menuIcon div {
+            width: 25px;
+            height: 3px;
+            background-color: black;
+            margin: 3px 0;
+        }
+
+        #coinsDisplay {
+            font-size: 1.2em;
+            color: black;
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+
+        #coinsDisplay .symbol {
+            font-size: 0.6em;
+            margin-left: 5px;
+        }
+
+        #globalSymbol {
+            margin-right: 25px;
+            display: inline-block;
         }
 
         main {
@@ -52,32 +87,26 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        main h2 {
-            color: #FFD700;
-        }
-
-        footer {
-            background-color: rgba(44, 8, 77, 0.7);
-            color: white;
-            text-align: center;
-            padding: 10px;
-            width: 100%;
+            margin-top: 100px;
+            margin-bottom: 100px;
+            position: relative;
         }
 
         button {
             padding: 10px 20px;
-            background-color: #FFD700;
+            background-color: transparent;
             color: black;
             border: none;
             cursor: pointer;
             border-radius: 5px;
             margin-top: 20px;
+            display: flex;
+            align-items: center;
         }
 
         button:hover {
-            background-color: #E6B800;
+            background-color: rgba(44, 8, 77, 0.7);
+            color: white;
         }
 
         .hidden {
@@ -91,37 +120,36 @@
             position: relative;
         }
 
-        .logo {
-            width: 100%;
-            height: 0;
-            padding-bottom: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="black" stroke-width="3"><circle cx="32" cy="32" r="30" stroke="black" fill="yellow"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="30" font-family="Arial" fill="black" font-weight="bold">B</text></svg>') no-repeat center center;
-            background-size: contain;
-            transition: opacity 2s ease-out;
-        }
-
-        .cracked {
-            background-image: url('path/to/cracked-logo.svg'); /* Add your cracked logo SVG path here */
-        }
-
-        .particle {
+        .logo .letter {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            background: yellow;
-            border-radius: 50%;
-            opacity: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10em;
+            color: yellow;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        @keyframes destroy {
-            0% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(calc(50px - 100px * random())) translateY(calc(50px - 100px * random())); }
+        .referral-info {
+            margin-top: 20px;
+            text-align: left;
+            width: 80%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        #coinsDisplay {
-            margin-bottom: 20px;
-            font-size: 1.2em;
-            color: #FFD700;
+        .referral-info p {
+            margin: 5px 0;
         }
 
         @media (max-width: 600px) {
@@ -129,14 +157,13 @@
                 font-size: 1.2em;
             }
 
-            nav {
-                flex-wrap: wrap;
-            }
-
-            nav button {
-                flex: 1 0 100%;
-                margin: 5px;
-                font-size: 0.8em;
+            .nav-top,
+            .nav-bottom {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                justify-content: space-between;
+                padding: 10px 20px;
             }
 
             .logo-container {
@@ -145,58 +172,135 @@
             }
 
             #coinsDisplay {
-                font-size: 1em;
+                font-size: 1.2em;
+            }
+
+            #globalSymbol {
+                margin-right: -20;
+            }
+
+            .button-row {
+                height: auto;
+            }
+
+            .button-row button {
+                margin: 5px;
+            }
+
+            .referral-info {
+                width: 90%;
+                max-width: 300px;
+                bottom: 100px;
             }
         }
+
+        #menu {
+            position: fixed;
+            top: 60px;
+            bottom: 60px;
+            left: 0;
+            background-color: white;
+            color: black;
+            width: 150px;
+            z-index: 2;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .locked {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .locked::after {
+            content: '🔒';
+            margin-left: 5px;
+        }
+
+        .home-button {
+            background-color: transparent;
+            color: black;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .home-button:hover {
+            background-color: rgba(44, 8, 77, 0.7);
+            color: white;
+        }
     </style>
+    
 </head>
 <body>
     <header>
         <h1>Bit Mining App</h1>
     </header>
-    <nav>
-        <button>Choose Exchange</button>
-        <button>Referrals</button>
-        <button>Mine</button>
-        <button>Earn</button>
-        <button>Airdrop</button>
+    <nav class="nav-top">
+        <div id="menuIcon" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="coinsDisplay">0.00000 <span class="symbol">B</span></div>
+        <div id="globalSymbol">EN</div>
     </nav>
+    <div id="menu">
+        <button class="home-button">Home</button>
+        <button class="locked">Mainnet</button>
+        <button class="locked">Level</button>
+        <button onclick="openReferralTeam()">Referral Team</button>
+        <button class="locked">FAQ</button>
+        <button class="locked">White Paper</button>
+        <button class="locked">Support</button>
+        <button onclick="followTelegram()">Follow</button>
+    </div>
     <main>
-        <h2>Welcome to Bit Mining</h2>
-        <p>Start mining cryptocurrency today with our free, energy-light mobile app!</p>
-        
         <div class="logo-container" id="logoContainer">
-            <div id="coinsDisplay">Coins Mined: 0 BTC</div>
-            <div class="logo" id="logo"></div>
+            <div class="logo" id="logo">
+                <div class="coin"></div>
+                <div class="letter" onclick="startMining()">B</div>
+            </div>
         </div>
 
-        <button id="startMiningBtn">Start Mining</button>
         <div id="timer" class="hidden"></div>
 
         <h2 id="message"></h2>
     </main>
-    <footer>
-        <p>© 2023 Bit Mining Inc. All rights reserved.</p>
-    </footer>
 
+    <!-- Referral Info Section -->
+    <div id="referralInfo" class="referral-info hidden">
+        <p>No. of Invites: <span id="inviteCount">0</span></p>
+        <p>Mining Status of Referral: <span id="referralMiningStatus">Not mining</span></p>
+        <p>Increase Mining Speed With More Invites.</p>
+    </div>
+
+    <nav class="nav-bottom">
+        <!-- Add your bottom navigation items here -->
+    </nav>
+    
     <script>
         let totalCoins = 0;
         let coinsPerDay = 2;
         let secondsInADay = 86400;
         let coinsPerSecond = coinsPerDay / secondsInADay;
         let miningInterval;
-        let crackingInterval;
+        let miningStarted = false;
+        let startTime;
 
-        document.getElementById('startMiningBtn').addEventListener('click', () => {
-            document.getElementById('startMiningBtn').classList.add('hidden');
-            startMining();
-        });
-
+        // Function to start mining
         function startMining() {
-            // Start mining process
-            document.getElementById('timer').classList.remove('hidden');
+            if (miningStarted) return;
+            miningStarted = true;
 
-            let startTime = new Date().getTime();
+            document.getElementById('timer').classList.remove('hidden');
+            startTime = new Date().getTime();
+
+            // Start mining process
             miningInterval = setInterval(() => {
                 let currentTime = new Date().getTime();
                 let elapsedTime = currentTime - startTime;
@@ -204,60 +308,78 @@
                 let coinsMined = elapsedSeconds * coinsPerSecond;
                 totalCoins = coinsMined;
 
-                document.getElementById('timer').textContent = `Mining Time: ${Math.floor(elapsedSeconds)} seconds`;
-                document.getElementById('coinsDisplay').textContent = `Coins Mined: ${totalCoins.toFixed(6)} BTC`;
+                document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
 
                 if (totalCoins >= 1) {
-                    document.getElementById('message').textContent = `Congratulations! You've mined 1 BTC!`;
+                    document.getElementById('message').textContent = `Congratulations! You've mined 1 B!`;
                     clearInterval(miningInterval);
-                    clearInterval(crackingInterval);
+                    saveMiningProgress(); // Save mining progress when 1 B is mined
                 }
             }, 1000);
-
-            // Start cracking process
-            crackingInterval = setInterval(crackLogo, 1000);
         }
 
-        function crackLogo() {
-            const logo = document.getElementById('logo');
-            let crackPercentage = (totalCoins / coinsPerDay) * 100; // Calculate the crack percentage based on the total coins mined
-            logo.style.opacity = 1 - (crackPercentage / 100); // Adjust the logo opacity
-
-            if (totalCoins >= coinsPerDay) {
-                logo.classList.add('cracked');
-                setTimeout(() => {
-                    resetLogo();
-                    startMining();
-                }, 1000); // Wait for a short period before restarting the mining process
+        // Function to toggle menu visibility
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'flex';
             } else {
-                createParticles();
+                menu.style.display = 'none';
             }
         }
 
-        function createParticles() {
-            const logoContainer = document.getElementById('logoContainer');
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.animation = `destroy 2s linear`;
-            logoContainer.appendChild(particle);
-            setTimeout(() => {
-                particle.remove();
-            }, 2000);
+        // Function to open referral team section
+        function openReferralTeam() {
+            const referralInfo = document.getElementById('referralInfo');
+            referralInfo.classList.toggle('hidden');
+            updateInviteCount();
+            updateReferralMiningStatus();
         }
 
-        function resetLogo() {
-            const logo = document.getElementById('logo');
-            logo.classList.remove('cracked');
-            logo.style.opacity = 1;
+        // Function to update invite count
+        function updateInviteCount() {
+            let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
+            inviteCount++;
+            localStorage.setItem('inviteCount', inviteCount);
+            document.getElementById('inviteCount').textContent = inviteCount;
         }
 
-        function resetParticles() {
-            const particles = document.querySelectorAll('.particle');
-            particles.forEach(particle => {
-                particle.remove();
-            });
+        // Function to update referral mining status
+        function updateReferralMiningStatus() {
+            let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
+            let referralMiningStatus = 'Not mining';
+            if (inviteCount > 5) {
+                referralMiningStatus = 'Mining Medium';
+            } else if (inviteCount > 0) {
+                referralMiningStatus = 'Mining slow';
+            }
+            document.getElementById('referralMiningStatus').textContent = referralMiningStatus;
+        }
+
+        // Function to open Telegram link
+        function followTelegram() {
+            window.open('https://t.me/BITMINE_REAL', '_blank');
+        }
+
+        // Function to resume mining on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            resumeMining();
+        });
+
+        // Function to resume mining from localStorage
+        function resumeMining() {
+            totalCoins = parseFloat(localStorage.getItem('totalCoins')) || 0;
+            startTime = parseFloat(localStorage.getItem('startTime')) || new Date().getTime();
+            if (totalCoins > 0) {
+                document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
+                startMining();
+            }
+        }
+
+        // Function to save mining progress to localStorage
+        function saveMiningProgress() {
+            localStorage.setItem('totalCoins', totalCoins);
+            localStorage.setItem('startTime', startTime);
         }
     </script>
 </body>

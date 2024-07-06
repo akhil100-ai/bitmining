@@ -279,9 +279,9 @@
     </nav>
     <script>
         let totalCoins = parseFloat(localStorage.getItem('totalCoins')) || 0;
-        let coinsPerDay = 2;
-        let secondsInADay = 86400;
-        let coinsPerSecond = coinsPerDay / secondsInADay;
+        const coinsPerDay = 2;
+        const secondsInADay = 86400;
+        const coinsPerSecond = coinsPerDay / secondsInADay;
         let miningInterval;
         let miningStarted = false;
         let startTime = parseFloat(localStorage.getItem('startTime')) || new Date().getTime();
@@ -295,11 +295,10 @@
             localStorage.setItem('startTime', startTime);
 
             miningInterval = setInterval(() => {
-                let currentTime = new Date().getTime();
-                let elapsedTime = currentTime - startTime;
-                let elapsedSeconds = elapsedTime / 1000;
-                let coinsMined = elapsedSeconds * coinsPerSecond;
-                totalCoins = coinsMined;
+                const currentTime = new Date().getTime();
+                const elapsedTime = (currentTime - startTime) / 1000;
+                const coinsMined = elapsedTime * coinsPerSecond;
+                totalCoins = coinsMined + parseFloat(localStorage.getItem('totalCoins')) || 0;
 
                 document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
 
@@ -346,24 +345,22 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            resumeMining();
             document.getElementById('startMiningButton').addEventListener('click', startMining);
+            resumeMining();
         });
 
         function resumeMining() {
-            let lastUpdateTime = parseFloat(localStorage.getItem('lastUpdateTime')) || new Date().getTime();
-            let elapsedTime = new Date().getTime() - lastUpdateTime;
-            let elapsedSeconds = elapsedTime / 1000;
-            totalCoins += elapsedSeconds * coinsPerSecond;
-
+            const lastUpdateTime = parseFloat(localStorage.getItem('lastUpdateTime')) || startTime;
+            const currentTime = new Date().getTime();
+            const elapsedTime = (currentTime - lastUpdateTime) / 1000;
+            totalCoins += elapsedTime * coinsPerSecond;
             document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
             localStorage.setItem('totalCoins', totalCoins);
-            localStorage.setItem('lastUpdateTime', new Date().getTime());
+            localStorage.setItem('lastUpdateTime', currentTime);
         }
 
         function saveMiningProgress() {
             localStorage.setItem('totalCoins', totalCoins);
-            localStorage.setItem('startTime', startTime);
             localStorage.setItem('lastUpdateTime', new Date().getTime());
         }
     </script>

@@ -346,6 +346,7 @@
 
         document.addEventListener('DOMContentLoaded', (event) => {
             document.getElementById('startMiningButton').addEventListener('click', startMining);
+            document.getElementById('startMiningButton').addEventListener('touchstart', startMining); // Added touchstart event for mobile
             resumeMining();
         });
 

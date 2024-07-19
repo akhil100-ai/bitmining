@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow Background with 4D Coin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
     document.addEventListener('contextmenu', function(event) {
         event.preventDefault();
     }, false);
     </script>
 
-    <title>BITMINE</title>
     <style>
         body {
             margin: 0;
@@ -32,6 +33,33 @@
             100% {background-position: 0% 50%;}
         }
 
+        .level {
+            font-size: 1.5em;
+            color: white;
+            margin-bottom: 10px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            height: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: green;
+        }
+
         .coin {
             width: 150px;
             height: 150px;
@@ -40,11 +68,14 @@
             background-position: center;
             border-radius: 50%;
             padding: 50px;
+            margin-bottom: 50px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             border: 5px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
             position: relative;
             animation: none;
+            outline: none; /* Disable outline */
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight color */
         }
 
         .shaking {
@@ -63,14 +94,15 @@
             align-items: center;
             font-size: 1.5em;
             color: white;
-            margin-bottom: 20px;
+            margin-bottom: 50px;
         }
 
         .counter img {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 5px;
+            margin-bottom: 2px;
         }
 
         .plus-one {
@@ -119,40 +151,81 @@
         .navbar .nav-item:hover .box {
             background-color: #555;
         }
+
+        .navbar .box i {
+            margin-right: 5px;
+            color: white;
+        }
+
+        .tap-text {
+            font-size: 1.2em;
+            color: white;
+            margin-top: 10px;
     </style>
 </head>
 <body>
+    <div class="level" id="level">Level 1</div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
     <div class="counter" id="coinCounter">
         <img src="https://www.usmint.gov/wordpress/wp-content/uploads/2020/01/2020-native-american-one-dollar-uncirculated-coin-obverse-768x768.jpg" alt="Coin Image">
         <span id="coinCount">0</span>
     </div>
     <div class="coin" id="coin"></div>
+    <div class="tap-text">Tap to Start Mining !<br/>Referral Reward Distributed At Last !</div>
     <div class="navbar">
         <div class="nav-item">
-            <div class="box">refer</div>
+            <div class="box"><i class="fas fa-lock"></i> Airdrop</div>
         </div>
         <div class="nav-item">
-            <div class="box">task</div>
+            <div class="box"><i class="fas fa-lock"></i> Pool</div>
         </div>
         <div class="nav-item">
-            <div class="box">tap</div>
+            <div class="box"><i class="fas fa-unlock"></i> Tap</div>
         </div>
         <div class="nav-item">
-            <div class="box">boost</div>
+            <div class="box"><i class="fas fa-lock"></i>Map</div>
         </div>
         <div class="nav-item">
-            <div class="box">excha</div>
+            <div class="box"><i class="fas fa-lock"></i>Exchange</div>
         </div>
     </div>
     <script>
         let coinCount = 0;
+        let currentLevel = 1;
+        const levels = [
+            { level: 1, coinsNeeded: 5000 },
+            { level: 2, coinsNeeded: 10000 },
+            { level: 3, coinsNeeded: 50000 },
+            { level: 4, coinsNeeded: 100000 },
+            { level: 5, coinsNeeded: 500000 },
+            { level: 6, coinsNeeded: 1000000 },
+            { level: 7, coinsNeeded: 2000000 },
+            { level: 8, coinsNeeded: 5000000 },
+            { level: 9, coinsNeeded: 8000000 },
+            { level: 10, coinsNeeded: 10000000000 },
+        ];
         const coin = document.getElementById('coin');
         const coinCounter = document.getElementById('coinCounter');
         const coinCountDisplay = document.getElementById('coinCount');
+        const levelDisplay = document.getElementById('level');
+        const progressBar = document.getElementById('progressBar');
+
+        // Retrieve the saved coin count from localStorage
+        const savedCoinCount = localStorage.getItem('coinCount');
+        if (savedCoinCount !== null) {
+            coinCount = parseInt(savedCoinCount, 10);
+            coinCountDisplay.textContent = coinCount;
+            updateLevelAndProgress();
+        }
 
         coin.addEventListener('click', () => {
             coinCount++;
             coinCountDisplay.textContent = coinCount;
+
+            // Save the updated coin count to localStorage
+            localStorage.setItem('coinCount', coinCount);
 
             const plusOne = document.createElement('div');
             plusOne.textContent = '+1';
@@ -167,7 +240,24 @@
             setTimeout(() => {
                 coin.removeChild(plusOne);
             }, 1000);
+
+            updateLevelAndProgress();
         });
+
+        function updateLevelAndProgress() {
+            const currentLevelObj = levels.find(level => coinCount < level.coinsNeeded) || levels[levels.length - 1];
+            const nextLevelObj = levels[levels.indexOf(currentLevelObj) + 1];
+            const coinsNeeded = currentLevelObj.coinsNeeded;
+            const progress = (coinCount / coinsNeeded) * 100;
+
+            levelDisplay.textContent = `Level ${currentLevelObj.level}`;
+            progressBar.style.width = `${progress}%`;
+
+            if (nextLevelObj && coinCount >= coinsNeeded) {
+                currentLevelObj.level = nextLevelObj.level;
+                updateLevelAndProgress();
+            }
+        }
     </script>
 </body>
 </html>

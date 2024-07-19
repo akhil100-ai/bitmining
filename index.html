@@ -3,367 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bit Mining App</title>
+    <title>BITMINE</title>
     <style>
-        /* Styles remain unchanged */
         body {
-            background-color: black;
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: white;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            text-align: center;
+            background: linear-gradient(45deg, 
+                red, orange, yellow, green, blue, indigo, violet);
+            background-size: 400% 400%;
+            animation: rainbowBackground 10s ease infinite;
+            overflow: hidden;
+            flex-direction: column;
         }
 
-        header h1 {
-            margin: 0;
-            color: #FFD700;
-            font-size: 1.5em;
+        @keyframes rainbowBackground {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
         }
 
-        .nav-top,
-        .nav-bottom {
-            background-color: white;
-            padding: 20px;
+        .coin {
+            width: 150px;
+            height: 150px;
+            background-image: url('https://www.usmint.gov/wordpress/wp-content/uploads/2020/01/2020-native-american-one-dollar-uncirculated-coin-obverse-768x768.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            padding: 50px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            animation: none;
+        }
+
+        .shaking {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        .counter {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            position: fixed;
-            width: 100%;
-            z-index: 1;
-            color: black;
+            font-size: 1.5em;
+            color: white;
+            margin-bottom: 20px;
         }
 
-        .nav-top {
-            top: 0;
-        }
-
-        .nav-bottom {
-            bottom: 0;
-        }
-
-        #menuIcon {
-            position: absolute;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            cursor: pointer;
+        .counter img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             margin-right: 10px;
         }
 
-        #menuIcon div {
-            width: 25px;
-            height: 3px;
-            background-color: black;
-            margin: 3px 0;
-        }
-
-        #coinsDisplay {
-            font-size: 1.2em;
-            color: black;
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-        }
-
-        #coinsDisplay .symbol {
-            font-size: 0.6em;
-            margin-left: 5px;
-        }
-
-        #globalSymbol {
-            margin-right: 25px;
-            display: inline-block;
-        }
-
-        main {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 100px;
-            margin-bottom: 100px;
-            position: relative;
-        }
-
-        button {
-            padding: 10px 20px;
-            background-color: transparent;
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        button:hover {
-            background-color: rgba(44, 8, 77, 0.7);
-            color: white;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .logo-container {
-            width: 80%;
-            max-width: 200px;
-            margin: 20px auto;
-            position: relative;
-        }
-
-        .logo .letter {
+        .plus-one {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10em;
-            color: yellow;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .referral-info {
-            margin-top: 20px;
-            text-align: left;
-            width: 80%;
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: absolute;
-            bottom: 20px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
+            font-size: 1.5em;
+            color: yellow;
+            opacity: 0;
+            animation: showPlusOne 1s ease;
         }
 
-        .referral-info p {
-            margin: 5px 0;
+        @keyframes showPlusOne {
+            0% {top: -40px; opacity: 1;}
+            100% {top: -80px; opacity: 0;}
         }
 
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 1.2em;
-            }
-
-            .nav-top,
-            .nav-bottom {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                justify-content: space-between;
-                padding: 10px 20px;
-            }
-
-            .logo-container {
-                width: 70%;
-                max-width: 150px;
-            }
-
-            #coinsDisplay {
-                font-size: 1.2em;
-            }
-
-            #globalSymbol {
-                margin-right: -20;
-            }
-
-            .button-row {
-                height: auto;
-            }
-
-            .button-row button {
-                margin: 5px;
-            }
-
-            .referral-info {
-                width: 90%;
-                max-width: 300px;
-                bottom: 100px;
-            }
-        }
-
-        #menu {
-            position: fixed;
-            top: 60px;
-            bottom: 60px;
-            left: 0;
-            background-color: white;
-            color: black;
-            width: 150px;
-            z-index: 2;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 20px;
-        }
-
-        .locked {
+        .navbar {
             display: flex;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
-        }
-
-        .locked::after {
-            content: '🔒';
-            margin-left: 5px;
-        }
-
-        .home-button {
-            background-color: transparent;
-            color: black;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .home-button:hover {
-            background-color: rgba(44, 8, 77, 0.7);
+            background-color: black;
             color: white;
+            padding: 10px 0;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+        }
+
+        .navbar .nav-item {
+            text-align: center;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .navbar .nav-item .box {
+            display: inline-block;
+            padding: 10px;
+            background-color: blue;
+            border: 1px solid #555;
+            border-radius: 5px;
+        }
+
+        .navbar .nav-item:hover .box {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Bit Mining App</h1>
-    </header>
-    <nav class="nav-top">
-        <div id="menuIcon" onclick="toggleMenu()">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-        <div id="coinsDisplay">0.00000 <span class="symbol">B</span></div>
-        <div id="globalSymbol">EN</div>
-    </nav>
-    <div id="menu">
-        <button class="home-button">Home</button>
-        <button class="locked">Mainnet</button>
-        <button class="locked">Level</button>
-        <button onclick="openReferralTeam()">Referral Team</button>
-        <button class="locked">FAQ</button>
-        <button class="locked">White Paper</button>
-        <button class="locked">Support</button>
-        <button onclick="followTelegram()">Follow</button>
+    <div class="counter" id="coinCounter">
+        <img src="https://www.usmint.gov/wordpress/wp-content/uploads/2020/01/2020-native-american-one-dollar-uncirculated-coin-obverse-768x768.jpg" alt="Coin Image">
+        <span id="coinCount">0</span>
     </div>
-    <main>
-        <div class="logo-container" id="logoContainer">
-            <div class="logo" id="logo">
-                <div class="coin"></div>
-                <div class="letter" id="startMiningButton">B</div>
-            </div>
+    <div class="coin" id="coin"></div>
+    <div class="navbar">
+        <div class="nav-item">
+            <div class="box">refer</div>
         </div>
-        <div id="timer" class="hidden"></div>
-        <h2 id="message"></h2>
-    </main>
-    <div id="referralInfo" class="referral-info hidden">
-        <p>No. of Invites: <span id="inviteCount">0</span></p>
-        <p>Mining Status of Referral: <span id="referralMiningStatus">Not mining</span></p>
-        <p>Increase Mining Speed With More Invites.</p>
+        <div class="nav-item">
+            <div class="box">task</div>
+        </div>
+        <div class="nav-item">
+            <div class="box">tap</div>
+        </div>
+        <div class="nav-item">
+            <div class="box">boost</div>
+        </div>
+        <div class="nav-item">
+            <div class="box">excha</div>
+        </div>
     </div>
-    <nav class="nav-bottom">
-        <!-- Add your bottom navigation items here -->
-    </nav>
     <script>
-        let totalCoins = parseFloat(localStorage.getItem('totalCoins')) || 0;
-        const coinsPerDay = 2;
-        const secondsInADay = 86400;
-        const coinsPerSecond = coinsPerDay / secondsInADay;
-        let miningInterval;
-        let miningStarted = false;
-        let startTime = parseFloat(localStorage.getItem('startTime')) || new Date().getTime();
+        let coinCount = 0;
+        const coin = document.getElementById('coin');
+        const coinCounter = document.getElementById('coinCounter');
+        const coinCountDisplay = document.getElementById('coinCount');
 
-        function startMining() {
-            if (miningStarted) return;
-            miningStarted = true;
+        coin.addEventListener('click', () => {
+            coinCount++;
+            coinCountDisplay.textContent = coinCount;
 
-            document.getElementById('timer').classList.remove('hidden');
-            startTime = new Date().getTime();
-            localStorage.setItem('startTime', startTime);
+            const plusOne = document.createElement('div');
+            plusOne.textContent = '+1';
+            plusOne.classList.add('plus-one');
+            coin.appendChild(plusOne);
 
-            miningInterval = setInterval(() => {
-                const currentTime = new Date().getTime();
-                const elapsedTime = (currentTime - startTime) / 1000;
-                const coinsMined = elapsedTime * coinsPerSecond;
-                totalCoins = coinsMined + parseFloat(localStorage.getItem('totalCoins')) || 0;
+            coin.classList.add('shaking');
+            setTimeout(() => {
+                coin.classList.remove('shaking');
+            }, 500);
 
-                document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
-
-                if (totalCoins >= 1) {
-                    document.getElementById('message').textContent = `Congratulations! You've mined 1 B!`;
-                    clearInterval(miningInterval);
-                    saveMiningProgress();
-                }
+            setTimeout(() => {
+                coin.removeChild(plusOne);
             }, 1000);
-        }
-
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'flex' : 'none';
-        }
-
-        function openReferralTeam() {
-            const referralInfo = document.getElementById('referralInfo');
-            referralInfo.classList.toggle('hidden');
-            updateInviteCount();
-            updateReferralMiningStatus();
-        }
-
-        function updateInviteCount() {
-            let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
-            inviteCount++;
-            localStorage.setItem('inviteCount', inviteCount);
-            document.getElementById('inviteCount').textContent = inviteCount;
-        }
-
-        function updateReferralMiningStatus() {
-            let inviteCount = parseInt(localStorage.getItem('inviteCount')) || 0;
-            let referralMiningStatus = 'Not mining';
-            if (inviteCount > 5) {
-                referralMiningStatus = 'Mining Medium';
-            } else if (inviteCount > 0) {
-                referralMiningStatus = 'Mining slow';
-            }
-            document.getElementById('referralMiningStatus').textContent = referralMiningStatus;
-        }
-
-        function followTelegram() {
-            window.open('https://t.me/BITMINE_REAL', '_blank');
-        }
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.getElementById('startMiningButton').addEventListener('click', startMining);
-            document.getElementById('startMiningButton').addEventListener('touchstart', startMining); // Added touchstart event for mobile
-            resumeMining();
         });
-
-        function resumeMining() {
-            const lastUpdateTime = parseFloat(localStorage.getItem('lastUpdateTime')) || startTime;
-            const currentTime = new Date().getTime();
-            const elapsedTime = (currentTime - lastUpdateTime) / 1000;
-            totalCoins += elapsedTime * coinsPerSecond;
-            document.getElementById('coinsDisplay').innerHTML = `${totalCoins.toFixed(6)}<span class="symbol">B</span>`;
-            localStorage.setItem('totalCoins', totalCoins);
-            localStorage.setItem('lastUpdateTime', currentTime);
-        }
-
-        function saveMiningProgress() {
-            localStorage.setItem('totalCoins', totalCoins);
-            localStorage.setItem('lastUpdateTime', new Date().getTime());
-        }
     </script>
 </body>
 </html>
